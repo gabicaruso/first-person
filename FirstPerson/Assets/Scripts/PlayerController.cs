@@ -34,16 +34,16 @@ public class PlayerController : MonoBehaviour
         
         //Tratando movimentação do mouse
         float mouse_dX = Input.GetAxis("Mouse X");
-        float mouse_dY = Input.GetAxis("Mouse Y");
+        float mouse_dY = -Input.GetAxis("Mouse Y");
         
         Vector3 direction = transform.right * x + transform.up * y + transform.forward * z;
 
         //Tratando a rotação da câmera
-        cameraRotation += mouse_dY;
+        cameraRotation += 3f * mouse_dY;
         Mathf.Clamp(cameraRotation, -75.0f, 75.0f);
 
         characterController.Move(direction * _baseSpeed * Time.deltaTime);
-        transform.Rotate(Vector3.up, mouse_dX);
+        transform.Rotate(Vector3.up, 3f * mouse_dX);
 
         characterController.Move(direction * _baseSpeed * Time.deltaTime);
 
