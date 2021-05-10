@@ -14,11 +14,17 @@ public class PlayerController : MonoBehaviour
     //Utilizada para poder travar a rotação no angulo que quisermos.
     float cameraRotation;
 
+    // public bool isGrounded;
+    // Rigidbody rb;
+
     void Start()
     {
         characterController = GetComponent<CharacterController>();
         playerCamera = GameObject.Find("Main Camera");
         cameraRotation = 0.0f;
+
+        // rb = GetComponent<Rigidbody>();
+        // jump = new Vector3(0.0f, 2.0f, 0.0f);
     }
 
     void Update()
@@ -30,7 +36,7 @@ public class PlayerController : MonoBehaviour
         float y = 0;
         if(!characterController.isGrounded){
             y = -_gravidade;
-        }
+        } 
         
         //Tratando movimentação do mouse
         float mouse_dX = Input.GetAxis("Mouse X");
@@ -42,10 +48,12 @@ public class PlayerController : MonoBehaviour
         cameraRotation += 3f * mouse_dY;
         Mathf.Clamp(cameraRotation, -75.0f, 75.0f);
 
-        characterController.Move(direction * _baseSpeed * Time.deltaTime);
+        Vector3 velocity = new Vector3(direction.x * _baseSpeed, direction.y, direction.z * _baseSpeed);
+        if (Input.GetKeyDown ("space")){
+            velocity.y = 3 * _baseSpeed;
+        } 
+        characterController.Move(velocity * Time.deltaTime);
         transform.Rotate(Vector3.up, 3f * mouse_dX);
-
-        characterController.Move(direction * _baseSpeed * Time.deltaTime);
 
         playerCamera.transform.localRotation = Quaternion.Euler(cameraRotation, 0.0f, 0.0f);
     }
@@ -56,7 +64,11 @@ public class PlayerController : MonoBehaviour
         Debug.DrawRay(playerCamera.transform.position, transform.forward*10.0f, Color.magenta);
         if(Physics.Raycast(playerCamera.transform.position, transform.forward, out hit, 100.0f))
         {
-            Debug.Log(hit.collider.name);
+            // Debug.Log(hit.collider.name);
         }
     }
+
+    // void OnCollisionStay(){
+    //     isGrounded = true;
+    // }
 }
