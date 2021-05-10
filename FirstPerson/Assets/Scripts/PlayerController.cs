@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    float _baseSpeed = 10.0f;
+    float _baseSpeed = 20.0f;
     float _gravidade = 9.8f;
+
+    public static int pontos;
 
     CharacterController characterController;
 
@@ -22,6 +24,8 @@ public class PlayerController : MonoBehaviour
         characterController = GetComponent<CharacterController>();
         playerCamera = GameObject.Find("Main Camera");
         cameraRotation = 0.0f;
+
+        pontos = 0;
 
         // rb = GetComponent<Rigidbody>();
         // jump = new Vector3(0.0f, 2.0f, 0.0f);
@@ -61,14 +65,27 @@ public class PlayerController : MonoBehaviour
     void LateUpdate()
     {
         RaycastHit hit;
-        Debug.DrawRay(playerCamera.transform.position, transform.forward*10.0f, Color.magenta);
-        if(Physics.Raycast(playerCamera.transform.position, transform.forward, out hit, 100.0f))
+        Debug.DrawRay(playerCamera.transform.position, playerCamera.transform.forward*10.0f, Color.magenta);
+        if(Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out hit, 100.0f))
         {
-            // Debug.Log(hit.collider.name);
+            Debug.Log(hit.collider.name);
         }
     }
 
-    // void OnCollisionStay(){
-    //     isGrounded = true;
+    // void OnCollisionEnter (Collision col) 
+    // {
+    //     if (col.gameObject.CompareTag("bau"))
+    //     {
+    //         Debug.Log ("bau");
+    //     }
     // }
+
+    void OnTriggerEnter(Collider col)
+    {
+        if(col.tag == "bau")
+        {
+            pontos++;
+            Destroy(col.gameObject);    
+        }
+    }
 }
